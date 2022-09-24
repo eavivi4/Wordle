@@ -5,7 +5,7 @@
 #include <fstream>
 using namespace std;
 
-int TRIES = 5;
+#define TRIES 5
 HANDLE h = GetStdHandle(STD_OUTPUT_HANDLE);
 int correct;
 // Create a map for the word to color letters yellow
@@ -27,7 +27,23 @@ int main ()
     int count = 0;
     correct = 0;
 
-    string ran = "start";
+    vector<string> words;
+
+    // Get a word from the file
+    ifstream myfile;
+    myfile.open("words.txt");
+    string line;
+    int file_size = 0;
+    while (getline(myfile, line))
+    {
+        words.push_back(line);
+        file_size++;
+    }
+    myfile.close();
+
+    // Random word from file
+    srand (time(0));
+    string ran = words[rand() % file_size];
 
     // Have 5 tries
     while (count < TRIES)
@@ -102,7 +118,10 @@ int main ()
             SetConsoleTextAttribute(h, 3);
 
             // Print the correct word
-            cout << "START" << endl;
+            for (int i = 0; i < ran.size(); i++)
+            {
+                PrintChar(ran[i]);
+            }
             SetConsoleTextAttribute(h, 7);
             
         }
