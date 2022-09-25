@@ -19,14 +19,45 @@ void PrintChar(char input)
     return;
 }
 
-int main ()
+void PrintWordle(string input, string ran)
 {
-    
-    // Initalize variables to use
-    string input = " ";
-    int count = 0;
-    correct = 0;
+    // Check input with the word
+    // 1. Capitalize the input
+    // 2. Color the letters correctly
+    // 3. Increase or decrease counters
+    for (int i = 0; i < TRIES; i++)
+    {
+        if (valid[input[i]] && ran[i] == input[i])
+        {
+            // Color letter green and print
+            SetConsoleTextAttribute(h, 2);
+            PrintChar(input[i]);
 
+            // Count correct letters and decrease count of specific letter
+            valid[input[i]]--;
+            correct++;
+        }
+
+        // If this letter is in the map
+        else if (valid[input[i]])
+        {
+            // Color letter yellow, print and decrease specific letter count
+            SetConsoleTextAttribute(h, 14);
+            PrintChar(input[i]);
+            valid[input[i]]--;
+        }
+
+        else
+        {
+            // If in none, print in white
+            SetConsoleTextAttribute(h, 7);
+            PrintChar(input[i]);
+        }
+    }
+}
+
+string FindWord()
+{
     vector<string> words;
 
     // Get a word from the file
@@ -43,7 +74,34 @@ int main ()
 
     // Random word from file
     srand (time(0));
-    string ran = words[rand() % file_size];
+    string one_word = words[rand() % file_size];
+    return one_word;
+}
+
+void Lost(string ran)
+{
+    cout << "Better luck next time :(" << endl;
+        cout << "The word was: ";
+        SetConsoleTextAttribute(h, 3);
+
+        // Print the correct word
+        for (int i = 0; i < ran.size(); i++)
+        {
+            PrintChar(ran[i]);
+        }
+        SetConsoleTextAttribute(h, 7);
+        return;
+}
+
+int main ()
+{
+    
+    // Initalize variables to use
+    string input = " ";
+    int count = 0;
+    correct = 0;
+
+    string ran = FindWord();
 
     // Have 5 tries
     while (count < TRIES)
@@ -61,39 +119,7 @@ int main ()
             getline(cin, input);
         }
 
-        // Check input with the word
-        // 1. Capitalize the input
-        // 2. Color the letters correctly
-        // 3. Increase or decrease counters
-        for (int i = 0; i < TRIES; i++)
-        {
-            if (valid[input[i]] && ran[i] == input[i])
-            {
-                // Color letter green and print
-                SetConsoleTextAttribute(h, 2);
-                PrintChar(input[i]);
-
-                // Count correct letters and decrease count of specific letter
-                valid[input[i]]--;
-                correct++;
-            }
-
-            // If this letter is in the map
-            else if (valid[input[i]])
-            {
-                // Color letter yellow, print and decrease specific letter count
-                SetConsoleTextAttribute(h, 14);
-                PrintChar(input[i]);
-                valid[input[i]]--;
-            }
-
-            else
-            {
-                // If in none, print in white
-                SetConsoleTextAttribute(h, 7);
-                PrintChar(input[i]);
-            }
-        }
+        PrintWordle(input, ran);
 
         // Return color of terminal to white
         SetConsoleTextAttribute(h, 7);
@@ -113,16 +139,7 @@ int main ()
         // If arrived at max tries
         else if (count == TRIES)
         {
-            cout << "Better luck next time :(" << endl;
-            cout << "The word was: ";
-            SetConsoleTextAttribute(h, 3);
-
-            // Print the correct word
-            for (int i = 0; i < ran.size(); i++)
-            {
-                PrintChar(ran[i]);
-            }
-            SetConsoleTextAttribute(h, 7);
+            Lost(ran);
             
         }
 
