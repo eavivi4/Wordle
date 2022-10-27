@@ -1,4 +1,4 @@
-# Wordle
+# Wordle **Moved to Games project**
 
 **Implemented a user input responding program based on the popular 5 letter guessing game**
 
